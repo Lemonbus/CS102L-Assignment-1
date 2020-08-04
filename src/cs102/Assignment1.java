@@ -16,12 +16,14 @@ public class Assignment1 {
 	public static void main(String[] args) {
 		TennisDatabase database = new TennisDatabase();
 		
-		try {
-			database.loadFromFile(args[0]);
-		} catch (TennisDatabaseRuntimeException e) {
-			e.printStackTrace();
-		} catch (TennisDatabaseException e) {
-			e.printStackTrace();
+		if (args.length != 0) {
+		
+			try {
+				database.loadFromFile(args[0]);
+			} catch (TennisDatabaseRuntimeException | TennisDatabaseException e) {
+				System.out.println("No files were loaded successfully on startup, please load a file");
+			}
+		
 		}
 		
 		sendHelpMessage();

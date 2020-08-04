@@ -96,7 +96,7 @@ class TennisPlayerContainer implements TennisPlayerContainerInterface {
 	@Override
 	public TennisPlayer[] getAllPlayers() throws TennisDatabaseRuntimeException {
 		
-		if (entry == null) return null;
+		if (entry == null) return new TennisPlayer[0];
 		
 		TennisPlayer[] resultArray = new TennisPlayer[numOfPlayers];
 		
