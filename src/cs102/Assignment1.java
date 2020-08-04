@@ -63,7 +63,7 @@ public class Assignment1 {
 						
 						if (match == null) continue;
 						
-						System.out.println(getFormattedMatchString(match, database));
+						System.out.println(database.getFormattedMatchString(match));
 					}
 				} catch (TennisDatabaseRuntimeException | TennisDatabaseException e1) {
 					e1.printStackTrace();
@@ -76,7 +76,7 @@ public class Assignment1 {
 					
 					if (match == null) break;
 					
-					System.out.println(getFormattedMatchString(match, database));
+					System.out.println(database.getFormattedMatchString(match));
 					
 				}
 				
@@ -115,13 +115,27 @@ public class Assignment1 {
 			case 5:
 				System.out.println("Please enter the ID of the first player you'd like to insert");
 				String id1 = scanner.next();
+				
+				if (!database.isValidPlayerId(id1)) {
+					System.out.println("Player ID '" + id1 + "' is not a valid player ID");
+					break;
+				}
+				
 				System.out.println("Please enter the ID of the second player you'd like to insert");
 				String id2 = scanner.next();
+				
+				if (!database.isValidPlayerId(id2)) {
+					System.out.println("Player ID '" + id2 + "' is not a valid player ID");
+					break;
+				}
+				
 				System.out.println("Please enter the date of the match in the following format: YYYYMMDD");
 				String date = scanner.next();
 				int[] separatedDate = getDate(date);
+				
 				System.out.println("Please enter the location of the match");
 				String tourneyCountry = scanner.next();
+				
 				System.out.println("Please enter the score of the match");
 				String score = scanner.next();
 				
@@ -189,30 +203,12 @@ public class Assignment1 {
 		return new int[] { year, month, day };
 	}
 	
-	private static String getFormattedMatchString(TennisMatch match, TennisDatabase database) {
-		
-		if (match == null) return null;
-		
-		return match.getDateDay() + "/" + match.getDateMonth() + "/" + match.getDateYear() + ": " + 
-				getShortenedName(match.getIdPlayer1(), database) + " vs. " + getShortenedName(match.getIdPlayer2(), database) + ", " + match.getTournament() + ", " + match.getMatchScore();
-	}
-	
 	private static String getFormattedPlayerString(TennisPlayer player) {
 		
 		if (player == null) return null;
 		
 		return player.getId() + ": " + player.getFirstName() + " " + player.getLastName() + " - Birthyear: " + player.getBirthYear() + " - Country: " + player.getCountry();
 		
-	}
-	
-	private static String getShortenedName(String id, TennisDatabase database) {
-		if (id == null) return null;
-		
-		TennisPlayer player = database.getPlayer(id);
-		
-		if (player == null) return null;
-		
-		return player.getFirstName().substring(0, 1) + ". " + player.getLastName();
 	}
 	
 	private static boolean isNumber(String string) {

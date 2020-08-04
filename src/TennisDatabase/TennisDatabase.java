@@ -68,6 +68,8 @@ public class TennisDatabase implements TennisDatabaseInterface {
 			}
 		}
 		
+		scanner.close();
+		
 	}
 	
 	private boolean checkFileValidity(File file) {
@@ -81,7 +83,10 @@ public class TennisDatabase implements TennisDatabaseInterface {
 			return false;
 		}
 		
-		if (!scanner.hasNextLine()) return false; // empty file
+		if (!scanner.hasNextLine()) {
+			scanner.close();
+			return false; // empty file
+		}
 		
 		boolean loadedPlayers = false;
 		
@@ -89,14 +94,22 @@ public class TennisDatabase implements TennisDatabaseInterface {
 			
 			String[] data = scanner.nextLine().toUpperCase().split("/");
 			
-			if (!(data[0].equalsIgnoreCase("PLAYER") || data[0].equalsIgnoreCase("MATCH"))) return false; // invalid input data
+			if (!(data[0].equalsIgnoreCase("PLAYER") || data[0].equalsIgnoreCase("MATCH"))) {
+				scanner.close();
+				return false; // invalid input data
+			}
 			
 			if (data[0].equalsIgnoreCase("PLAYER")) {
 				
-				if (loadedPlayers) return false; // this is set when a match input is loaded, so if a player is loaded after it's set to true we know the file is invalid
+				if (loadedPlayers) {
+					scanner.close();
+					return false; // this is set when a match input is loaded, so if a player is loaded after it's set to true we know the file is invalid
+				}
 				
 			} else loadedPlayers = true;
 		}
+		
+		scanner.close();
 		
 		return true;
 	}
@@ -133,6 +146,28 @@ public class TennisDatabase implements TennisDatabaseInterface {
 		TennisMatch match = new TennisMatch(idPlayer1, idPlayer2, year, month, day, tournament, score, 1);
 		matchContainer.insertMatch(match);
 		playerContainer.insertMatch(match);
+	}
+	
+	public String getFormattedMatchString(TennisMatch match) {
+		
+		if (match == null) return null;
+		
+		return match.getDateDay() + "/" + match.getDateMonth() + "/" + match.getDateYear() + ": " + 
+				getShortenedName(match.getIdPlayer1()) + " vs. " + getShortenedName(match.getIdPlayer2()) + ", " + match.getTournament() + ", " + match.getMatchScore();
+	}
+	
+	public String getShortenedName(String id) {
+		if (id == null) return null;
+		
+		TennisPlayer player = getPlayer(id);
+		
+		if (player == null) return null;
+		
+		return player.getFirstName().substring(0, 1) + ". " + player.getLastName();
+	}
+	
+	public boolean isValidPlayerId(String id) {
+		return getPlayer(id) != null;
 	}
 
 }

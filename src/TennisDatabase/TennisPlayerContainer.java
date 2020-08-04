@@ -57,10 +57,6 @@ class TennisPlayerContainer implements TennisPlayerContainerInterface {
 			entry = newNode;
 		}
 		
-		if (currentIndex == numOfPlayers) {
-			
-		}
-		
 		numOfPlayers++;
 		
 	}
@@ -134,11 +130,14 @@ class TennisPlayerContainer implements TennisPlayerContainerInterface {
 		
 		TennisPlayerContainerNode node = entry;
 		
-		while (node != null) {
+		int i = 0;
+		
+		while (i < numOfPlayers) {
 			
 			if (node.getPlayer().getId().equals(playerId)) return node;
 			
 			node = node.getNext();
+			i++;
 			
 		}
 		
