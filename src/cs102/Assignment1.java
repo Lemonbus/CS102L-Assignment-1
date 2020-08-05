@@ -3,18 +3,27 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
+import TennisDatabase.Command;
 import TennisDatabase.TennisDatabase;
 import TennisDatabase.TennisDatabaseException;
 import TennisDatabase.TennisDatabaseRuntimeException;
 import TennisDatabase.TennisMatch;
-import TennisDatabase.TennisPlayer;
+import TennisDatabase.ViewPlayerMatchesCommand;
+import TennisDatabase.ViewPlayersCommand;
 
 public class Assignment1 {
 	
 	public static void main(String[] args) {
 		TennisDatabase database = new TennisDatabase();
+		
+		Scanner scanner = new Scanner(System.in);
+		
+		Map<Integer, Command> commandMap = new HashMap<Integer, Command>();
+		initCommands(commandMap, database, scanner);
 		
 		if (args.length != 0) {
 		
@@ -28,8 +37,6 @@ public class Assignment1 {
 		
 		sendHelpMessage();
 		
-		Scanner scanner = new Scanner(System.in);
-		
 		while (scanner.hasNextLine()) {
 			
 			String input = scanner.next();
@@ -39,37 +46,11 @@ public class Assignment1 {
 				continue;
 			}
 			
+			if (commandMap.get(Integer.parseInt(input)) != null) {
+				commandMap.get(Integer.parseInt(input)).execute();
+			}
+			
 			switch (Integer.parseInt(input)) {
-			case 1:
-				
-				if (database.getAllPlayers().length <= 0) {
-					System.out.println("There are no players to list in the database");
-					break;
-				}
-				
-				for (TennisPlayer player : database.getAllPlayers()) {
-					System.out.println(player);
-				}
-				
-				break;
-			case 2:
-				
-				System.out.println("Please insert the ID of the player you want the records of");
-				
-				String playerIdInput = scanner.next();
-				
-				try {
-					for (TennisMatch match : database.getMatchesOfPlayer(playerIdInput)) {
-						
-						if (match == null) continue;
-						
-						System.out.println(database.getFormattedMatchString(match));
-					}
-				} catch (TennisDatabaseRuntimeException | TennisDatabaseException e1) {
-					e1.printStackTrace();
-				}
-				
-				break;
 			case 3:
 				
 				for (TennisMatch match : database.getAllMatches()) {
@@ -201,6 +182,11 @@ public class Assignment1 {
 		int day = calendar.get(Calendar.DAY_OF_MONTH);
 		
 		return new int[] { year, month, day };
+	}
+	
+	private static void initCommands(Map<Integer, Command> map, TennisDatabase database, Scanner scanner) {
+		map.put(1, new ViewPlayersCommand(database));
+		map.put(2, new ViewPlayerMatchesCommand(database).attachScanner(scanner));
 	}
 	
 	private static boolean isNumber(String string) {
