@@ -48,7 +48,7 @@ public class Assignment1 {
 				}
 				
 				for (TennisPlayer player : database.getAllPlayers()) {
-					System.out.println(getFormattedPlayerString(player));
+					System.out.println(player);
 				}
 				
 				break;
@@ -106,7 +106,7 @@ public class Assignment1 {
 				
 				try {
 					database.insertPlayer(id.toUpperCase(), firstName.toUpperCase(), lastName.toUpperCase(), birthYear, country.toUpperCase());
-					System.out.println("Successfully inserted player: " + getFormattedPlayerString(database.getPlayer(id.toUpperCase())));
+					System.out.println("Successfully inserted player: " + database.getPlayer(id.toUpperCase()));
 				} catch (TennisDatabaseException e1) {
 					System.out.println("Unable to insert player");
 				}
@@ -201,14 +201,6 @@ public class Assignment1 {
 		int day = calendar.get(Calendar.DAY_OF_MONTH);
 		
 		return new int[] { year, month, day };
-	}
-	
-	private static String getFormattedPlayerString(TennisPlayer player) {
-		
-		if (player == null) return null;
-		
-		return player.getId() + ": " + player.getFirstName() + " " + player.getLastName() + " - Birthyear: " + player.getBirthYear() + " - Country: " + player.getCountry();
-		
 	}
 	
 	private static boolean isNumber(String string) {

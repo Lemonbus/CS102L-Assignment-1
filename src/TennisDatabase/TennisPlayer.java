@@ -48,5 +48,10 @@ public class TennisPlayer implements TennisPlayerInterface {
 	public String getCountry() {
 		return country;
 	}
+	
+	@Override
+	public String toString() {
+		return getId() + ": " + getFirstName() + " " + getLastName() + " - Birthyear: " + getBirthYear() + " - Country: " + getCountry();
+	}
 
 }
