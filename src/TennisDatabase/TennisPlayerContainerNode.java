@@ -1,5 +1,15 @@
 package TennisDatabase;
 
+/**
+ * CS-102 Assignment 1 - Tennis Database project
+ * Kettering University - Summer 2020
+ * Under instruction from Professor Giuseppe Turini
+ * 
+ * Represents a node for the TennisPlayerContainer LinkedList
+ * 
+ * @author Jeremy Gooch / Freshman I
+ *
+ */
 class TennisPlayerContainerNode implements TennisPlayerContainerNodeInterface {
 	
 	private SortedLinkedList<TennisMatch> sortedMatches;

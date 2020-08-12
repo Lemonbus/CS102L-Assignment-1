@@ -1,5 +1,15 @@
 package TennisDatabase;
 
+/**
+ * CS-102 Assignment 1 - Tennis Database project
+ * Kettering University - Summer 2020
+ * Under instruction from Professor Giuseppe Turini
+ * 
+ * Represents a reference-based storage container for TennisPlayer objects
+ * 
+ * @author Jeremy Gooch / Freshman I
+ *
+ */
 class TennisPlayerContainer implements TennisPlayerContainerInterface {
 
 	private TennisPlayerContainerNode entry;
@@ -24,11 +34,16 @@ class TennisPlayerContainer implements TennisPlayerContainerInterface {
 		return playerNode.getPlayer();
 		
 	}
-
+	
+	/**
+	 * Inserts a TennisPlayer object into the LinkedList in a sorted fashion
+	 * 
+	 * @param p - TennisPlayer object to insert
+	 */
 	@Override
 	public void insertPlayer(TennisPlayer p) throws TennisDatabaseException {
 		
-		if (numOfPlayers == 0) {
+		if (numOfPlayers == 0) { // LinkedList is empty so we should make one to store the player object // SPECIAL CASE
 			entry = new TennisPlayerContainerNode(p);
 			entry.setPrev(entry);
 			entry.setNext(entry);
@@ -40,13 +55,15 @@ class TennisPlayerContainer implements TennisPlayerContainerInterface {
 		TennisPlayerContainerNode prevNode = currentNode.getPrev();
 		int currentIndex = 0;
 		
-		while (currentIndex < numOfPlayers && currentNode.getPlayer().compareTo(p) < 0) {
+		while (currentIndex < numOfPlayers && currentNode.getPlayer().compareTo(p) < 0) { // traverse through nodes and see where we can insert based on compareTo() results
 			prevNode = currentNode;
 			currentNode = currentNode.getNext();
 			currentIndex++;
 		}
 		
 		TennisPlayerContainerNode newNode = new TennisPlayerContainerNode(p);
+		
+		// insert and complete circular LinkedList
 		
 		newNode.setPrev(prevNode);
 		newNode.setNext(currentNode);
@@ -60,7 +77,12 @@ class TennisPlayerContainer implements TennisPlayerContainerInterface {
 		numOfPlayers++;
 		
 	}
-
+	
+	/**
+	 * Inserts the match into the TennisPlayer node of each player that particpated
+	 * 
+	 * @param m - TennisMatch object to insert
+	 */
 	@Override
 	public void insertMatch(TennisMatch m) throws TennisDatabaseException {
 		
@@ -69,6 +91,9 @@ class TennisPlayerContainer implements TennisPlayerContainerInterface {
 		
 		TennisPlayerContainerNode player1Node = null;
 		TennisPlayerContainerNode player2Node = null;
+		
+		// search for each player by traversing the list
+		// if either of the players can't be found we shouldn't insert the match and the user should update the database
 		
 		try {
 			player1Node = getPlayerNode(player1.getId());
@@ -89,6 +114,11 @@ class TennisPlayerContainer implements TennisPlayerContainerInterface {
 		
 	}
 	
+	/**
+	 * Gets all players currently in the LinkedList
+	 * 
+	 * @return TennisPlayer[] of all players in database
+	 */
 	@Override
 	public TennisPlayer[] getAllPlayers() throws TennisDatabaseRuntimeException {
 		
@@ -110,6 +140,13 @@ class TennisPlayerContainer implements TennisPlayerContainerInterface {
 		
 	}
 
+	/**
+	 * 
+	 * Gets all matches that a specified player participated in
+	 * 
+	 * @param playerId - the player id that we are searching for
+	 * @return TennisMatch[] of all matches a player has participated in
+	 */
 	@Override
 	public TennisMatch[] getMatchesOfPlayer(String playerId) throws TennisDatabaseException, TennisDatabaseRuntimeException {
 		
@@ -124,6 +161,13 @@ class TennisPlayerContainer implements TennisPlayerContainerInterface {
 		return playerNode.getMatches();
 	}
 	
+	/**
+	 * Gets the node of a TennisPlayer with the specified id
+	 * 
+	 * @param playerId - the id we are searching for
+	 * @return - TennisPlayerContainerNode which contains the same playerId that was inputted
+	 * @throws TennisDatabaseRuntimeException - when the player by id playerId cannot be found
+	 */
 	private TennisPlayerContainerNode getPlayerNode(String playerId) throws TennisDatabaseRuntimeException {
 		
 		if (entry == null) throw new TennisDatabaseRuntimeException("No players are loaded");
@@ -132,7 +176,7 @@ class TennisPlayerContainer implements TennisPlayerContainerInterface {
 		
 		int i = 0;
 		
-		while (i < numOfPlayers) {
+		while (i < numOfPlayers) { // simple iteration through all nodes in LinkedList
 			
 			if (node.getPlayer().getId().equals(playerId)) return node;
 			

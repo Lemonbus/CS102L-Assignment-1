@@ -11,47 +11,59 @@ import TennisDatabase.TennisDatabaseRuntimeException;
 import TennisDatabase.TennisMatch;
 import TennisDatabase.TennisPlayer;
 
+/**
+ * CS-102 Assignment 1 - Tennis Database project
+ * Kettering University - Summer 2020
+ * Under instruction from Professor Giuseppe Turini
+ * 
+ * @author Jeremy Gooch / Freshman I
+ *
+ */
 public class Assignment1 {
 	
+	/**
+	 * Entry to program, contains database object which instructs other objects to gather/modify data and also scans for user input
+	 * @param args - startup flags
+	 */
 	public static void main(String[] args) {
-		TennisDatabase database = new TennisDatabase();
+		TennisDatabase database = new TennisDatabase(); // single database object
 		
-		if (args.length != 0) {
+		if (args.length != 0) { // try to load file that might exist in startup parameters
 		
 			try {
 				database.loadFromFile(args[0]);
 			} catch (TennisDatabaseRuntimeException | TennisDatabaseException e) {
-				System.out.println("No files were loaded successfully on startup, please load a file");
+				System.out.println("No files were loaded successfully on startup, please load a file"); // let user know there is no data in database
 			}
 		
 		}
 		
 		sendHelpMessage();
 		
-		Scanner scanner = new Scanner(System.in);
+		Scanner scanner = new Scanner(System.in); // scanner object for input
 		
-		while (scanner.hasNextLine()) {
+		while (scanner.hasNextLine()) { // begin reading user input
 			
 			String input = scanner.next();
 			
-			if (!isNumber(input)) {
+			if (!isNumber(input)) { // since all of our commands are number based, we don't really care about any other form of input other than integers
 				sendHelpMessage();
 				continue;
 			}
 			
-			switch (Integer.parseInt(input)) {
+			switch (Integer.parseInt(input)) { // switch statement to determine what to do when certain values are entered
 			case 1:
 				
-				if (database.getAllPlayers().length <= 0) {
+				if (database.getAllPlayers().length <= 0) { // no players are in the database, so we can't list them
 					System.out.println("There are no players to list in the database");
-					break;
+					break; // break back to main loop
 				}
 				
 				for (TennisPlayer player : database.getAllPlayers()) {
-					System.out.println(player);
+					System.out.println(player); // TennisPlayer has a custom toString() method which makes it easy to print here
 				}
 				
-				break;
+				break; // break back to main loop after listing players
 			case 2:
 				
 				System.out.println("Please insert the ID of the player you want the records of");
@@ -65,8 +77,10 @@ public class Assignment1 {
 						
 						System.out.println(database.getFormattedMatchString(match));
 					}
-				} catch (TennisDatabaseRuntimeException | TennisDatabaseException e1) {
-					e1.printStackTrace();
+				} catch (TennisDatabaseRuntimeException e1) {
+					System.out.println("No matches found for player");
+				} catch (TennisDatabaseException e2) {
+					System.out.println("Player ID does not exist");
 				}
 				
 				break;
@@ -83,6 +97,8 @@ public class Assignment1 {
 				break;
 			case 4:
 				
+				// request player data from user
+				
 				System.out.println("Please enter the ID of the player you'd like to insert");
 				String id = scanner.next();
 				System.out.println("Please enter the first name of the player you'd like to insert");
@@ -94,7 +110,7 @@ public class Assignment1 {
 				
 				String birthYearInput = scanner.next();
 				
-				if (!isNumber(birthYearInput)) {
+				if (!isNumber(birthYearInput)) { // verify that the birth year entered is an integer
 					System.out.println("Invalid number");
 					break;
 				}
@@ -116,7 +132,7 @@ public class Assignment1 {
 				System.out.println("Please enter the ID of the first player you'd like to insert");
 				String id1 = scanner.next();
 				
-				if (!database.isValidPlayerId(id1)) {
+				if (!database.isValidPlayerId(id1)) { // check that id1 is an existing player in the database
 					System.out.println("Player ID '" + id1 + "' is not a valid player ID");
 					break;
 				}
@@ -124,7 +140,7 @@ public class Assignment1 {
 				System.out.println("Please enter the ID of the second player you'd like to insert");
 				String id2 = scanner.next();
 				
-				if (!database.isValidPlayerId(id2)) {
+				if (!database.isValidPlayerId(id2)) { // check that id2 is an existing player in the database
 					System.out.println("Player ID '" + id2 + "' is not a valid player ID");
 					break;
 				}
@@ -140,14 +156,14 @@ public class Assignment1 {
 				String score = scanner.next();
 				
 				try {
-					database.insertMatch(id1, id2, separatedDate[0], separatedDate[1], separatedDate[2], tourneyCountry, score); // TODO: Check for valid player ID
+					database.insertMatch(id1, id2, separatedDate[0], separatedDate[1], separatedDate[2], tourneyCountry, score);
 					System.out.println("Successfully inserted match!");
 				} catch (TennisDatabaseException e1) {
 					System.out.println("Unable to insert the requested match");
 				}
 				break;
 			case 6:
-				System.out.println("Please enter the full name of the file you'd like to load");
+				System.out.println("Please enter the full name of the file you'd like to load"); // this requires the user to also include the extension (i.e. .txt)
 				String fileName = scanner.next();
 				try {
 					database.loadFromFile(fileName);
@@ -158,17 +174,20 @@ public class Assignment1 {
 				
 				break;
 			case 7:
-				scanner.close();
-				System.exit(0);
+				scanner.close(); // close scanner to prevent memory leaks
+				System.exit(0); // close program
 				break;
 			default:
-				sendHelpMessage();
+				sendHelpMessage(); // any random input should just return help message
 				break;
 			}
 			
 		}
 	}
 	
+	/*
+	 * Simple method to send the user a list of commands
+	 */
 	private static void sendHelpMessage() {
 		System.out.println("*********************");
 		System.out.println("CS-102 Tennis Manager / Available Commands");
@@ -182,6 +201,12 @@ public class Assignment1 {
 		System.out.println("*********************");
 	}
 	
+	/**
+	 * Generic method to take a date represented in a string format and split it into day, month and year
+	 * 
+	 * @param string - string of date which should be represented in the following format: yyyyMMdd
+	 * @return - array of integers where int[0] = year, int[1] = month, int[2] = day
+	 */
 	private static int[] getDate(String string) {
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyyMMdd");
 		
@@ -203,6 +228,12 @@ public class Assignment1 {
 		return new int[] { year, month, day };
 	}
 	
+	/**
+	 * Simple check to determine whether a string is an integer
+	 * 
+	 * @param string - string to check
+	 * @return true if string can be converted into an integer, otherwise false
+	 */
 	private static boolean isNumber(String string) {
 		
 		try {

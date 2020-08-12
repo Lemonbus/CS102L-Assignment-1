@@ -3,6 +3,16 @@ package TennisDatabase;
 import java.util.Arrays;
 import java.util.Comparator;
 
+/**
+ * CS-102 Assignment 1 - Tennis Database project
+ * Kettering University - Summer 2020
+ * Under instruction from Professor Giuseppe Turini
+ * 
+ * Represents a array-based storage container for TennisMatch objects
+ * 
+ * @author Jeremy Gooch / Freshman I
+ *
+ */
 class TennisMatchContainer implements TennisMatchContainerInterface {
 
 	private TennisMatch[] matches;
@@ -11,6 +21,11 @@ class TennisMatchContainer implements TennisMatchContainerInterface {
 		matches = new TennisMatch[25]; // hardcoded space for 25 matches by default
 	}
 	
+	/**
+	 * Adds the TennisMatch to the array, resizing it if necessary
+	 * 
+	 * @param m - the match to insert
+	 */
 	@Override
 	public void insertMatch(TennisMatch m) throws TennisDatabaseException {
 		
@@ -18,9 +33,8 @@ class TennisMatchContainer implements TennisMatchContainerInterface {
 		
 		if (slot == -1) {
 			matches = resizeArray(getAllMatches());
+			slot = findFirstAvailableSlot(getAllMatches());
 		}
-		
-		slot = findFirstAvailableSlot(getAllMatches());
 		
 		matches[slot] = m;
 		
@@ -28,11 +42,22 @@ class TennisMatchContainer implements TennisMatchContainerInterface {
 		
 	}
 	
+	/**
+	 * Gets all matches in the database
+	 * 
+	 * @return - TennisMatch[] of all matches in the array
+	 */
 	@Override
 	public TennisMatch[] getAllMatches() throws TennisDatabaseRuntimeException {
 		return matches;
 	}
 	
+	/**
+	 * Gets all matches of a specified player
+	 * 
+	 * @param playerId - the id of the player
+	 * @return TennisMatch[] of all matches the player participated in
+	 */
 	@Override
 	public TennisMatch[] getMatchesOfPlayer(String playerId) throws TennisDatabaseRuntimeException {
 		
@@ -53,6 +78,12 @@ class TennisMatchContainer implements TennisMatchContainerInterface {
 		return personalMatches;
 	}
 	
+	/**
+	 * Creates a new array 1.5x bigger than the inputted one and copies the contents of the inputted array into it
+	 * 
+	 * @param array - the array to resize
+	 * @return TennisMatch[] - the new resized array
+	 */
 	private TennisMatch[] resizeArray(TennisMatch[] array) {
 		TennisMatch[] b = new TennisMatch[(int) Math.round(array.length * 1.5)];
 		
@@ -63,6 +94,12 @@ class TennisMatchContainer implements TennisMatchContainerInterface {
 		return b;
 	}
 	
+	/**
+	 * Finds the first index where the value is null (which means open for use)
+	 * 
+	 * @param array - the array to search
+	 * @return - the first index available
+	 */
 	private int findFirstAvailableSlot(TennisMatch[] array) {
 		
 		int result = -1;
@@ -78,34 +115,15 @@ class TennisMatchContainer implements TennisMatchContainerInterface {
 		
 	}
 	
+	/**
+	 * Sorts the matches based on the {@link TennisMatch#compareTo(TennisMatch)} method
+	 * 
+	 * @param array - the array to sort
+	 * @return TennisMatch[] the sorted array
+	 */
 	private TennisMatch[] sortMatches(TennisMatch[] array) {
 		Arrays.sort(array, Comparator.nullsLast(Comparator.naturalOrder()));
 		return array;
 	}
-	
-//	private void sort(TennisMatch[] matches, TennisMatch currentMatch) {
-//		
-//		for (int i = 0; i < matches.length; i++) {
-//			if (currentMatch.compareTo(matches[i]) > 0) {
-//				rightShift(matches, i);
-//				matches[i] = currentMatch;
-//				break;
-//			}
-//		}
-//		
-//	}
-	
-//	private TennisMatch[] rightShift(TennisMatch[] array, int slot) {
-//	
-//	for (int i = array.length - 1; i > slot; i--) {
-//		TennisMatch previousItem = array[i - 1];
-//		array[i] = previousItem;
-//	}
-//	
-//	array[slot] = null;
-//	
-//	return array;
-//	
-//}
 
 }

@@ -2,6 +2,16 @@ package TennisDatabase;
 
 import java.util.Calendar;
 
+/**
+ * CS-102 Assignment 1 - Tennis Database project
+ * Kettering University - Summer 2020
+ * Under instruction from Professor Giuseppe Turini
+ * 
+ * Represents a tennis match including participants, time/place and score
+ * 
+ * @author Jeremy Gooch / Freshman I
+ *
+ */
 public class TennisMatch implements TennisMatchInterface {
 
 	private String idPlayer1;
@@ -13,7 +23,7 @@ public class TennisMatch implements TennisMatchInterface {
 	private String matchScore;
 	private int winner;
 	
-	public TennisMatch(String idPlayer1, String idPlayer2, int dateYear, int dateMonth, int dateDay, String tourney, String matchScore, int winner) {
+	public TennisMatch(String idPlayer1, String idPlayer2, int dateYear, int dateMonth, int dateDay, String tourney, String matchScore) {
 		this.idPlayer1 = idPlayer1;
 		this.idPlayer2 = idPlayer2;
 		this.dateYear = dateYear;
@@ -21,7 +31,13 @@ public class TennisMatch implements TennisMatchInterface {
 		this.dateDay = dateDay;
 		this.tourney = tourney;
 		this.matchScore = matchScore;
-		this.winner = winner;
+		
+		try {
+			this.winner = TennisMatchInterface.processMatchScore(matchScore);
+		} catch (TennisDatabaseRuntimeException e) {
+			this.winner = -1;
+		}
+		
 	}
 	
 	@Override
@@ -38,7 +54,7 @@ public class TennisMatch implements TennisMatchInterface {
 		return thisDate.compareTo(otherDate);
 		
 	}
-
+	
 	@Override
 	public String getIdPlayer1() {
 		return idPlayer1;
@@ -78,5 +94,5 @@ public class TennisMatch implements TennisMatchInterface {
 	public int getWinner() {
 		return winner;
 	}
-
+	
 }

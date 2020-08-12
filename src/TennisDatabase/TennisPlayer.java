@@ -1,5 +1,15 @@
 package TennisDatabase;
 
+/**
+ * CS-102 Assignment 1 - Tennis Database project
+ * Kettering University - Summer 2020
+ * Under instruction from Professor Giuseppe Turini
+ * 
+ * Represents a tennis player including id, name, birth year and home country
+ * 
+ * @author Jeremy Gooch / Freshman I
+ *
+ */
 public class TennisPlayer implements TennisPlayerInterface {
 	
 	private String id;
