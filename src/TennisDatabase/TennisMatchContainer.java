@@ -75,6 +75,8 @@ class TennisMatchContainer implements TennisMatchContainerInterface {
 			}
 		}
 		
+		if (counter == 0) throw new TennisDatabaseRuntimeException("No matches found for player: " + playerId);
+		
 		return personalMatches;
 	}
 	

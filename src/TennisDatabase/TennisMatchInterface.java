@@ -13,7 +13,7 @@ import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 
 // Interface (package-private) providing the specifications for the TennisMatch class.
-public interface TennisMatchInterface extends Comparable<TennisMatch> {      
+interface TennisMatchInterface extends Comparable<TennisMatch> {      
    // Accessors (getters).
    public String getIdPlayer1();
    public String getIdPlayer2();

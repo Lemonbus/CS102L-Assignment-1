@@ -142,7 +142,7 @@ public class TennisDatabase implements TennisDatabaseInterface {
 	 * @param id - the playerId of the player to shorten
 	 * @return - the player's name in the following format: first initial. last name (i.e. Jeremy Gooch -> J. GOOCH)
 	 */
-	public String getShortenedName(String id) {
+	private String getShortenedName(String id) {
 		if (id == null) return null;
 		
 		TennisPlayer player = getPlayer(id);
@@ -158,7 +158,7 @@ public class TennisDatabase implements TennisDatabaseInterface {
 	 * @param match - the match to check the winner of
 	 * @return - name of winner or "No winner" if there is no clear winner (in the event of invalid score or a draw)
 	 */
-	public String getWinnerPlayer(TennisMatch match) {
+	private String getWinnerPlayer(TennisMatch match) {
 		try {
 			
 			if (match.getWinner() == 1) {
@@ -195,8 +195,9 @@ public class TennisDatabase implements TennisDatabaseInterface {
 	}
 
 	@Override
-	public TennisMatch[] getMatchesOfPlayer(String playerId)
-			throws TennisDatabaseException, TennisDatabaseRuntimeException {
+	public TennisMatch[] getMatchesOfPlayer(String playerId) throws TennisDatabaseException, TennisDatabaseRuntimeException {
+		if (!isValidPlayerId(playerId)) throw new TennisDatabaseException("Invalid player ID: " + playerId);
+		
 		return matchContainer.getMatchesOfPlayer(playerId);
 	}
 

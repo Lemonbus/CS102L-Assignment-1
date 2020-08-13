@@ -77,10 +77,10 @@ public class Assignment1 {
 						
 						System.out.println(database.getFormattedMatchString(match));
 					}
-				} catch (TennisDatabaseRuntimeException e1) {
-					System.out.println("No matches found for player");
-				} catch (TennisDatabaseException e2) {
-					System.out.println("Player ID does not exist");
+				} catch (TennisDatabaseRuntimeException e) {
+					System.out.println("No matches found for player: " + playerIdInput);
+				} catch (TennisDatabaseException e) {
+					System.out.println("Invalid player ID: " + playerIdInput);
 				}
 				
 				break;
