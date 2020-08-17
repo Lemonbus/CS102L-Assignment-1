@@ -66,6 +66,11 @@ public class Assignment1 {
 				break; // break back to main loop after listing players
 			case 2:
 				
+				if (database.getAllPlayers().length <= 0) { // no players are in the database, so we can't get the records of any
+					System.out.println("There are no players to lookup in the database");
+					break; // break back to main loop
+				}
+				
 				System.out.println("Please insert the ID of the player you want the records of");
 				
 				String playerIdInput = scanner.next();
@@ -86,12 +91,18 @@ public class Assignment1 {
 				break;
 			case 3:
 				
-				for (TennisMatch match : database.getAllMatches()) {
-					
-					if (match == null) break;
-					
-					System.out.println(database.getFormattedMatchString(match));
-					
+				try {
+				
+					for (TennisMatch match : database.getAllMatches()) {
+						
+						if (match == null) break;
+						
+						System.out.println(database.getFormattedMatchString(match));
+						
+					}
+				
+				} catch (TennisDatabaseRuntimeException e) {
+					System.out.println("There are no matches in the database");
 				}
 				
 				break;
@@ -149,6 +160,11 @@ public class Assignment1 {
 				String date = scanner.next();
 				int[] separatedDate = getDate(date);
 				
+				if (separatedDate == null) {
+					System.out.println("The date you entered is not in a valid format");
+					break;
+				}
+				
 				System.out.println("Please enter the location of the match");
 				String tourneyCountry = scanner.next();
 				
@@ -205,7 +221,7 @@ public class Assignment1 {
 	 * Generic method to take a date represented in a string format and split it into day, month and year
 	 * 
 	 * @param string - string of date which should be represented in the following format: yyyyMMdd
-	 * @return - array of integers where int[0] = year, int[1] = month, int[2] = day
+	 * @return - null if string cannot be parsed OR array of integers where int[0] = year, int[1] = month, int[2] = day
 	 */
 	private static int[] getDate(String string) {
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyyMMdd");
@@ -214,8 +230,7 @@ public class Assignment1 {
 		try {
 			date = dateFormatter.parse(string);
 		} catch (ParseException e) {
-			e.printStackTrace();
-			System.out.println("Unable to parse date for match");
+			return null;
 		}
 		
 		Calendar calendar = Calendar.getInstance();

@@ -16,6 +16,7 @@ import java.util.Comparator;
 class TennisMatchContainer implements TennisMatchContainerInterface {
 
 	private TennisMatch[] matches;
+	private int numOfMatches = 0;
 	
 	public TennisMatchContainer() {
 		matches = new TennisMatch[25]; // hardcoded space for 25 matches by default
@@ -39,6 +40,7 @@ class TennisMatchContainer implements TennisMatchContainerInterface {
 		matches[slot] = m;
 		
 		sortMatches(matches);
+		numOfMatches++;
 		
 	}
 	
@@ -49,6 +51,9 @@ class TennisMatchContainer implements TennisMatchContainerInterface {
 	 */
 	@Override
 	public TennisMatch[] getAllMatches() throws TennisDatabaseRuntimeException {
+		
+		if (numOfMatches == 0) throw new TennisDatabaseRuntimeException("No matches found in container");
+		
 		return matches;
 	}
 	
